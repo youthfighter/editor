@@ -1,0 +1,16 @@
+/* You can add global styles to this file, and also import other style files */
+body{
+    margin: 0px;
+    padding: 0px;
+    overflow-x: hidden;
+}
+/* 隐藏部分不需要的按钮 */
+.editormd-menu li:nth-child(38){
+    display: none;
+}
+.editormd-menu li:nth-child(42){
+    display: none;
+}
+.editormd-menu li:nth-child(43){
+    display: none;
+}
