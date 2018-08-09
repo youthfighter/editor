@@ -18,8 +18,8 @@ export class EditorComponent implements OnInit {
   constructor(private electronService:ElectronService) { }
 
   ngOnInit() {
-    console.log('editor');
     let data = this.markdown;
+    let self = this;
     this.myEditor = editormd("editormd", {
       placeholder : "此处开始编写您要发布的内容..." || this.placeholder,
       markdown: data,
@@ -42,8 +42,7 @@ export class EditorComponent implements OnInit {
       onload: function() {
         var keyMap = {
           "Ctrl-S": function(cm) {
-            this.onSave.emit();
-            console.log(1);
+            self.onSave.emit(self.getMarkdown());
           }
         };
         this.addKeyMap(keyMap);
@@ -80,6 +79,11 @@ export class EditorComponent implements OnInit {
   }
   getMarkdown() {
     return this.myEditor.getMarkdown()
+  }
+  setMarkdown(markdown: string) {
+    this.markdown = markdown;
+    console.log(this.myEditor);
+    this.myEditor.setMarkdown(markdown);
   }
 
 }

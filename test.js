@@ -1,7 +1,7 @@
 const nedb = require('nedb');
 
 /* 设置配置 */
-function updateConfig(o) {
+function updateSettings(o) {
     const db = new nedb({
         filename: './data/save.db',
         autoload: true
@@ -15,7 +15,7 @@ function updateConfig(o) {
     });
 }
 /* 获取配置 */
-function getConfig() {
+function querySettings() {
     const db = new nedb({
         filename: './data/save.db',
         autoload: true
@@ -46,7 +46,7 @@ function initConfig() {
 }
 
 /* initConfig(); */
-updateConfig({"width":1000});
-/* getConfig().then(function(doc) {
+updateSettings({"width":1000});
+/* querySettings().then(function(doc) {
     console.log(doc);
 }) */

@@ -1,2 +1,1 @@
-<app-editor [markdown]='' placeholder='开始编辑markdown文章...' (onChange)="markdownChange($event)"></app-editor>
-<!-- <a routerLink="/uploadimage">go</a> -->
+<app-editor [markdown]='markdown' placeholder='开始编辑markdown文章...' (onChange)="markdownChange($event)" (onSave)="saveMarkdown($event)"></app-editor>
