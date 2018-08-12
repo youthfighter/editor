@@ -1,10 +1,10 @@
-const {app, BrowserWindow, Menu, globalShortcut, dialog, ipcMain} = require('electron')
+const {app, BrowserWindow, Menu, dialog, ipcMain} = require('electron')
 const path = require('path')
 const url = require('url')
-const menus = require('./mainsrc/menus/index');
+const getMenus = require('./mainsrc/menus/index');
 const settingsService = require('./mainsrc/settings/index');
-const configs = require('./mainsrc/configs/index');
-const saveFile = require('./mainsrc/menus/saveFile');
+const { saveFile, saveAs } = require('./mainsrc/menus/saveFile');
+const recentOpenFileList = require('./mainsrc/menus/recentOpenFileList');
 
 // 保持一个对于 window 对象的全局引用，如果你不这样做，
 // 当 JavaScript 对象被垃圾回收， window 会被自动地关闭
@@ -13,11 +13,12 @@ let win
 async function createWindow () {
     // 创建浏览器窗口。
     let config = await settingsService.querySettings();
-    console.log(config);
+    if (!config) config = await settingsService.initSettings();
     win = new BrowserWindow({width: config.width, height: config.height, webPreferences: {webSecurity: false}});
     if (config.maximize) win.maximize();
-    
-    const menu = Menu.buildFromTemplate(menus)
+    const menuConfig = await getMenus();
+    console.log(menuConfig);
+    const menu = Menu.buildFromTemplate(menuConfig);
     /* 设置调试模式 */
     Menu.setApplicationMenu(menu)
     // 然后加载应用的 index.html。
@@ -26,18 +27,17 @@ async function createWindow () {
         protocol: 'file:',
         slashes: true
     }))
-/*     globalShortcut.register('Ctrl+s', function(){
-        
-    }) */
     // 打开开发者工具。
-    win.webContents.openDevTools();
+    //win.webContents.openDevTools();
 
     win.on('resize', () => {
         let wh = win.getSize()
         win.webContents.send('resize', wh);
     });
     win.on('maximize', () => {
-        settingsService.updateSettings({maximize: true});
+        let wh = win.getSize();
+        console.log(wh);
+        settingsService.updateSettings({width: wh[0], height: wh[1], maximize: true});
     });
     // 当 window 被关闭，这个事件会被触发。
     win.on('closed', () => {
@@ -48,9 +48,15 @@ async function createWindow () {
     })
 
     /* ipcMain bind */
-    ipcMain.on('saveMarkdown', function (event, arg) {
+     ipcMain.on('saveMarkdown', function (event, arg) {
         saveFile(arg);
-    })
+    });
+    ipcMain.on('saveAsMarkdown', function (event, arg) {
+        saveAs(arg);
+    });
+    ipcMain.on('initMarkdown', function(event, arg) {
+        recentOpenFileList.openDefaultFile(win);
+    });
 }
 
 // Electron 会在初始化后并准备

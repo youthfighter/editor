@@ -5,7 +5,7 @@ const db = new nedb({
 });
 /* 设置配置 */
 function updateSettings(o) {
-    let _id = 'width';
+    let _id = 'settings';
     return new Promise((resolve, reject) => {
         db.update({_id}, {$set: o}, { multi: true }, function(err, doc) {
             if (err) reject(err);
@@ -17,15 +17,27 @@ function updateSettings(o) {
 function querySettings() {
     return new Promise((resolve, reject) => {
         db.findOne({}, (err, doc) => {
+            if (err) resolve();
+            else resolve(doc);
+        })
+    });
+}
+
+function initSettings() {
+    return new Promise((resolve, reject) => {
+        db.insert({
+            _id: "settings",
+            width: 600,
+            height: 500
+        }, (err, doc) => {
             if (err) reject(err);
             else resolve(doc);
         })
     });
-
-    db.findOne({}, cb);
 }
 
 module.exports = {
     querySettings,
-    updateSettings
+    updateSettings,
+    initSettings
 }

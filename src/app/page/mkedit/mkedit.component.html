@@ -1,1 +1,1 @@
-<app-editor [markdown]='markdown' placeholder='开始编辑markdown文章...' (onChange)="markdownChange($event)" (onSave)="saveMarkdown($event)"></app-editor>
+<app-editor placeholder='开始编辑markdown文章...' (onLoad)="onLoad($event)" (onChange)="markdownChange($event)" (onSave)="saveMarkdown($event)"></app-editor>

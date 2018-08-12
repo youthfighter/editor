@@ -3,7 +3,8 @@ const fs = require('fs');
 
 module.exports = {
     getString,
-    saveString
+    saveString,
+    isExist
 }
 /**
  * 
@@ -31,7 +32,7 @@ async function saveString(filePath, str) {
 function isExist(filePath) {
     return new Promise((reslove, reject) => {
         fs.access(filePath, fs.constants.F_OK, (err) => {
-            reslove(!!err);
+            reslove(!err);
         });
     });
 }
@@ -40,10 +41,10 @@ function isExist(filePath) {
  * @return {Promise<string>} 返回文件内容
  */
 function readFile(filePath) {
-    return new Promise((reslove, reject) => {
+    return new Promise((resolve, reject) => {
         fs.readFile(filePath, 'utf8', function (err, data) {
             if(err) reject(err);
-            reslove(data.toString());
+            else resolve(data.toString());
         });    
     });
 }
@@ -55,7 +56,7 @@ function writeFile(filePath, str) {
     return new Promise((reslove, reject) => {
         fs.writeFile(filePath, str,function (err) {
             if(err) reject(err);
-            reslove(true);
+            else reslove(true);
         });
     });
 }

@@ -10,11 +10,12 @@ import { ElectronService } from 'ngx-electron';
 export class EditorComponent implements OnInit {
   public myEditor: any;
   public obj: any;
-  @Input() markdown: string;
+  markdown: string;
   @Input() placeholder: string;
 
   @Output() onChange = new EventEmitter<any>();
   @Output() onSave = new EventEmitter();
+  @Output() onLoad = new EventEmitter();
   constructor(private electronService:ElectronService) { }
 
   ngOnInit() {
@@ -40,6 +41,7 @@ export class EditorComponent implements OnInit {
       toolbarAutoFixed: true,
       saveHTMLToTextarea: true,
       onload: function() {
+        self.onLoad.emit();
         var keyMap = {
           "Ctrl-S": function(cm) {
             self.onSave.emit(self.getMarkdown());
@@ -82,7 +84,7 @@ export class EditorComponent implements OnInit {
   }
   setMarkdown(markdown: string) {
     this.markdown = markdown;
-    console.log(this.myEditor);
+    console.log(this.myEditor, markdown);
     this.myEditor.setMarkdown(markdown);
   }
 
