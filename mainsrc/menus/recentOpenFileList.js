@@ -1,5 +1,6 @@
 const DbService = require('../utils/dbService');
 const fileUtils = require('../utils/file');
+const configs = require('../configs/index');
 const { dialog } = require('electron');
 class RecentOpenFileList extends DbService{
     constructor(filename){
@@ -90,6 +91,7 @@ class RecentOpenFileList extends DbService{
     async openFile(win, filePath) {
         try {
             await this.insertOpenFile(filePath);
+            configs.currentFilepath = filePath;
             let md = await fileUtils.getString(filePath);
             win.webContents.send('openMarkdown', md);
         } catch(e) {

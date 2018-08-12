@@ -17,7 +17,6 @@ async function createWindow () {
     win = new BrowserWindow({width: config.width, height: config.height, webPreferences: {webSecurity: false}});
     if (config.maximize) win.maximize();
     const menuConfig = await getMenus();
-    console.log(menuConfig);
     const menu = Menu.buildFromTemplate(menuConfig);
     /* 设置调试模式 */
     Menu.setApplicationMenu(menu)

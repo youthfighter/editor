@@ -2,7 +2,6 @@ const { dialog, ipcMain } = require('electron');
 const configs = require('../configs/index');
 const fileUtils = require('../utils/file');
 function saveBtnClick(menus, win) {
-    console.log('savebtn')
     win.webContents.send('saveMarkdown');
 }
 function saveAsBtnClick(menus, win) {
@@ -11,10 +10,9 @@ function saveAsBtnClick(menus, win) {
 /* 保存的方法 */
 async function saveFile(arg) {
     /* 没有路径转为saveas方法 */
-    if (!configs.currentFilepath) {
-        saveAs(arg);
-        return;
-    }    
+    if (!configs.currentFilepath || !await fileUtils.isExist(configs.currentFilepath)) {
+        return saveAs(arg);
+    }  
     try {
         await fileUtils.saveString(configs.currentFilepath, arg);
     } catch (e) {
